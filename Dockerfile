@@ -4,7 +4,7 @@ ARG VERSION
 # Optional: Change Timezone
 ARG TZ=America/North_Dakota/Center
     
-FROM ocie:${VERSION}
+FROM bshp/ocie:${VERSION}
     
 LABEL org.opencontainers.image.authors="jason.everling@gmail.com"
     
