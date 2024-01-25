@@ -1,0 +1,44 @@
+#!/bin/bash
+    
+function app_shutdown()
+{
+    /usr/sbin/postfix stop;
+}
+    
+function app_reload()
+{
+    app_shutdown;
+    app_start;
+}
+    
+function app_start()
+{
+    #Start Foreground
+    /usr/sbin/postfix -c /etc/postfix start-fg;
+}
+    
+function app_certs()
+{
+    ${OCIE_HOME}/scripts/cacerts;
+}
+    
+function app_config()
+{
+    if [[ -z "${INTERNAL_DOMAIN}" ]] || [[ -z "${RELAY_CLIENTS}" ]] || [[ -z "${RELAY_HOST}" ]];then
+        echo "Ocie: Unable to generate a valid postfix configuration. env MAIL_DOMAIN is not set and is required.";
+        echo "Ocie: Ensure you have defined the required environment variables:";
+        echo "    INTERNAL_DOMAIN: Your internal domain name";
+        echo "    MAIL_DOMAIN: Your FQDN of this mail host";
+        echo "    RELAY_CLIENTS: IPs that are allowed to relay";
+        echo "    RELAY_HOST: Server where messages are relayed to";
+        exit 1;
+    fi;
+    #Generate updated postfix config
+    sed -i "s/#INTERNAL_DOMAIN/${INTERNAL_DOMAIN}/g" /etc/postfix/include/header_checks;
+    sed -i "s/#MAIL_DOMAIN/${MAIL_DOMAIN}/g" /etc/postfix/include/header_checks;
+    sed -i "s/#MAIL_DOMAIN/${MAIL_DOMAIN}/g" /etc/postfix/main.cf;
+    sed -i "s/#RELAY_HOST/${RELAY_HOST}/g" /etc/postfix/main.cf;
+    sed -i "s/#RELAY_CLIENTS/${RELAY_CLIENTS}/g" /etc/postfix/main.cf;
+    #Postfix needs updated copies
+    cp /etc/{hosts,localtime,nsswitch.conf,resolv.conf,services} /var/spool/postfix/etc/;
+}

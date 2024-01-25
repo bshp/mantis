@@ -1,0 +1,2 @@
+/from[\-\sA-Za-z0-9\.\]\[\(\)]*by #MAIL_DOMAIN \(Postfix\)(.*)/ REPLACE Received: from edgegateway by #MAIL_DOMAIN$1
+/^Message-Id:\s+<(.*?)@.*#INTERNAL_DOMAIN>/ REPLACE Message-Id: <$1@#MAIL_DOMAIN>

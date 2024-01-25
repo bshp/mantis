@@ -1,0 +1,27 @@
+name: Docker CI
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '.gitignore'
+      - 'README.md'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Configure Docker
+      env:
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+    - name: Build 22.04
+      run: |
+        docker build . --pull --build-arg VERSION=22.04 --tag bshp/mantis:latest --no-cache
+    - name: Push 22.04
+      run: |
+        docker tag bshp/mantis:latest bshp/mantis:22.04
+        docker push bshp/mantis:latest
+        docker push bshp/mantis:22.04
