@@ -11,7 +11,7 @@ LABEL org.opencontainers.image.authors="jason.everling@gmail.com"
 ARG TZ
     
 ENV APP_TYPE="postfix"
-ENV OCIE_TYPES=${OCIE_TYPES}:/etc/postfix/ocie/type
+ENV OCIE_TYPES=${OCIE_TYPES}:/etc/postfix
     
 RUN <<-EOD
     #!/usr/bin/env bash
