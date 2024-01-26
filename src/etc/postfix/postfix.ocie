@@ -45,5 +45,6 @@ function app_config()
     
 function app_test()
 {
+    app_config;
     echo $(/usr/sbin/postfix check)
 }

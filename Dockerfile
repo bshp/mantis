@@ -13,8 +13,7 @@ ARG TZ
 ENV APP_TYPE="postfix"
 ENV OCIE_TYPES=${OCIE_TYPES}:/etc/postfix
     
-RUN <<-EOD
-    #!/usr/bin/env bash
+RUN <<"EOD" bash
     set -eu;
     POSTFIX_HOME=/etc/postfix;
     mkdir -p $POSTFIX_HOME/include;
