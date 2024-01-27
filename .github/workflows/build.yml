@@ -19,7 +19,7 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_TOKEN
     - name: Build 22.04
       run: |
-        docker build . --pull --build-arg VERSION=22.04 --tag bshp/mantis:latest --no-cache
+        docker build . --pull --build-arg OCIE_VERSION=22.04 --tag bshp/mantis:latest --no-cache
     - name: Push 22.04
       run: |
         docker tag bshp/mantis:latest bshp/mantis:22.04
