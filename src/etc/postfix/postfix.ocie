@@ -19,7 +19,7 @@ function app_start()
     
 function app_certs()
 {
-    ${OCIE_HOME}/scripts/cacerts;
+    ${OCIE_LIB}/cacerts;
 }
     
 function app_config()
