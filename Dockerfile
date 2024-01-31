@@ -10,8 +10,9 @@ LABEL org.opencontainers.image.authors="jason.everling@gmail.com"
     
 ARG TZ
     
-ENV APP_TYPE="postfix"
+# Ocie
 ENV OCIE_CONFIG=/etc/postfix
+ENV APP_TYPE="postfix"
     
 RUN <<"EOD" bash
     set -eu;
