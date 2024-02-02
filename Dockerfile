@@ -1,18 +1,11 @@
 # Ocie Version, e.g 22.04 unquoted
 ARG OCIE_VERSION
     
-# Optional: Change Timezone
-ARG TZ=America/North_Dakota/Center
-    
 FROM bshp/ocie:${OCIE_VERSION}
     
-LABEL org.opencontainers.image.authors="jason.everling@gmail.com"
-    
-ARG TZ
-    
 # Ocie
-ENV OCIE_CONFIG=/etc/postfix
-ENV APP_TYPE="postfix"
+ENV OCIE_CONFIG=/etc/postfix \
+    APP_TYPE="postfix"
     
 RUN <<"EOD" bash
     set -eu;
