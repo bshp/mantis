@@ -7,7 +7,7 @@ always_add_missing_headers = no
 append_dot_mydomain = no
 biff = no
 compatibility_level = 3.6
-header_checks = pcre:/etc/postfix/include/header_checks
+#HEADER_CHECKS
 inet_interfaces = all
 inet_protocols = ipv4
 mailbox_size_limit = 0
@@ -19,5 +19,5 @@ myorigin = /etc/mailname
 queue_directory = /var/spool/postfix
 readme_directory = no
 recipient_delimiter = +
-relayhost = #RELAY_HOST
+#RELAY_HOST
 smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination

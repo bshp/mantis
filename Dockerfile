@@ -6,6 +6,7 @@ FROM bshp/ocie:${OCIE_VERSION}
 # Ocie
 ENV OCIE_CONFIG=/etc/postfix \
     APP_TYPE="postfix" \
+    APP_HOME=/etc/postfix \
     APP_GROUP="root" \
     APP_OWNER="root" \
     INTERNAL_DOMAIN="" \
@@ -14,12 +15,11 @@ ENV OCIE_CONFIG=/etc/postfix \
     
 RUN <<"EOD" bash
     set -eu;
-    POSTFIX_HOME=/etc/postfix;
-    mkdir -p ${POSTFIX_HOME}/include;
+    mkdir -p ${APP_HOME}/include;
     # Add packages
     ocie --pkg "-add mailutils,postfix,postfix-pcre,procmail -upgrade";
-    chown -R ${APP_OWNER}:${APP_GROUP} ${POSTFIX_HOME};
-    chmod -R 0755 ${POSTFIX_HOME};
+    chown -R ${APP_OWNER}:${APP_GROUP} ${APP_HOME};
+    chmod -R 0755 ${APP_HOME};
     ocie --clean "-base";
 EOD
     

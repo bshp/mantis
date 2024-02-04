@@ -16,7 +16,7 @@ function app_start()
     #Ensure we have a valid postfix config
     app_test;
     #Start Foreground
-    /usr/sbin/postfix -c /etc/postfix start-fg;
+    /usr/sbin/postfix -c ${APP_HOME} start-fg;
 }
     
 function app_certs()
@@ -27,24 +27,26 @@ function app_certs()
 function app_config()
 {
     if [[ ! "${HOSTNAME}" == *.* ]];then
+        echo "Ocie: Unable to generate a valid postfix configuration";
         echo "Ocie: Postfix requires the hostname to be a fully-qualified domain name";
         echo "Ocie: Set your FQDN during runtime, e.g --hostname smtp.example.com";
-    fi;
-    if [[ -z "${INTERNAL_DOMAIN}" ]] || [[ -z "${MY_NETWORKS}" ]] || [[ -z "${RELAY_HOST}" ]];then
-        echo "Ocie: Unable to generate a valid postfix configuration";
-        echo "Ocie: Ensure you have defined the required environment variables:";
-        echo "    INTERNAL_DOMAIN: Your internal domain name";
-        echo "    MY_NETWORKS: IPs that are allowed to relay";
-        echo "    RELAY_HOST: Server where messages are relayed to";
         echo "Ocie: Container will now exit";
         exit 1;
     fi;
     #Generate updated postfix config
-    sed -i "s/#INTERNAL_DOMAIN/${INTERNAL_DOMAIN}/g" /etc/postfix/include/header_checks;
-    sed -i "s/#HOSTNAME/${HOSTNAME}/g" /etc/postfix/include/header_checks;
-    sed -i "s/#HOSTNAME/${HOSTNAME}/g" /etc/postfix/main.cf;
-    sed -i "s/#RELAY_HOST/${RELAY_HOST}/g" /etc/postfix/main.cf;
-    sed -i "s/#MY_NETWORKS/${MY_NETWORKS}/g" /etc/postfix/main.cf;
+    sed -i "s|#HOSTNAME|${HOSTNAME}|g" ${APP_HOME}/main.cf;
+    if [[ ! -z "${INTERNAL_DOMAIN}" ]];then
+        cp ${APP_HOME}/include/header_checks.dist ${APP_HOME}/include/header_checks;
+        sed -i "s|#HEADER_CHECKS|header_checks = pcre:${APP_HOME}/include/header_checks|g" ${APP_HOME}/include/header_checks;
+        sed -i "s|#INTERNAL_DOMAIN|${INTERNAL_DOMAIN}|g" ${APP_HOME}/include/header_checks;
+        sed -i "s|#HOSTNAME|${HOSTNAME}|g" ${APP_HOME}/include/header_checks;
+    fi;
+    if [[ ! -z "${MY_NETWORKS}" ]];then
+        sed -i "s|#MY_NETWORKS|${MY_NETWORKS}|g" ${APP_HOME}/main.cf;
+    fi;
+    if [[ ! -z "${RELAY_HOST}" ]];then
+        sed -i "s|#RELAY_HOST|relayhost = ${RELAY_HOST}|g" ${APP_HOME}/main.cf;
+    fi;
     #Postfix needs updated copies
     cp /etc/{hosts,localtime,nsswitch.conf,resolv.conf,services} /var/spool/postfix/etc/;
 }
@@ -61,7 +63,9 @@ function app_test()
     if [[ ! -z "${CFG_CHECK}" ]];then
         echo "Postfix Validation: FAILED";
         echo "Ocie: Ensure you have defined the required environment variables:";
+        echo "  Required:";
         echo "    HOSTNAME: Your FQDN of this mail host";
+        echo "  Optional:";
         echo "    INTERNAL_DOMAIN: Your internal domain name";
         echo "    MY_NETWORKS: IPs that are allowed to relay";
         echo "    RELAY_HOST: Server where messages are relayed to";
