@@ -26,22 +26,25 @@ wget
 ````
 #### Environment :  
 see [Ocie](https://github.com/bshp/ocie) for more info
+````
+HOSTNAME - sets [ mydestination, myhostname ] and for header_checks
+INTERNAL_DOMAIN - sets header_checks to remove internal/private domain/hostnames in header to the HOSTNAME
+MY_NETWORKS - sets the IP/Networks that are allowed to connect
+RELAY_HOST - set the relay destination, e.g smtp.gmail.com:465
+````
     
 #### Ports
-Expose whatever ports you need with docker run -p, default is no ports, below are postfix specific
 ````
 25  - Plain-text
-465 - SSL
-587 - StartTLS
 ````
 #### Direct:  
 ````
-docker run --entrypoint /usr/local/bin/ociectl -d bshp/mantis:latest --run
+docker run --entrypoint /usr/sbin/ociectl -d bshp/mantis:latest --run
 ````
 #### Custom:  
 Add at end of your entrypoint script either of:  
 ````
-/usr/local/bin/ociectl --run;
+/usr/sbin/ociectl --run;
 ````
 ````
 /usr/sbin/postfix -c /etc/postfix start-fg;
