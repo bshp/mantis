@@ -11,7 +11,8 @@ ENV OCIE_CONFIG=/etc/postfix \
     APP_OWNER="root" \
     INTERNAL_DOMAIN="" \
     MY_NETWORKS="" \
-    RELAY_HOST=""
+    RELAY_HOST="" \
+    POSTFIX_PID=/var/spool/postfix/pid/master.pid
     
 RUN <<"EOD" bash
     set -eu;

@@ -15,8 +15,9 @@ function app_start()
 {
     #Ensure we have a valid postfix config
     app_test;
-    #Start Foreground
-    /usr/sbin/postfix -c ${APP_HOME} start-fg;
+    /usr/sbin/postfix -c /etc/postfix;
+    sleep 5;
+    echo "$(cat ${POSTFIX_PID} | sed 's/ //'))";
 }
     
 function app_certs()
